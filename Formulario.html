@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" media="screen" />
+    <title>Formulario</title>
+  </head>
+
+  <body>
+    <form
+      action="Respuestas.php"
+      method="post"
+      enctype="multipart/form-data"
+      autocomplete="off"
+      class="needs-validation"
+      novalidate
+    >
+      <div class="form-container">
+        <h2>Por favor, contesta las siguientes preguntas</h2>
+        <h2><span class="error">* Campo Obligatorio</span></h2>
+      </div>
+      <input
+        type="hidden"
+        id="fecha_respuesta"
+        name="fecha_respuestas"
+        value="0"
+      />
+      <div class="form-box">
+        <label for="nombre">
+          Nombre completo: <span class="error">*</span><br
+        /></label>
+        <input
+          type="text"
+          class="form-control"
+          id="nombre"
+          name="nombre"
+          required
+        /><br /><br />
+      </div>
+      <div class="form-box">
+        <label for="sexo"> Sexo: <span class="error">*</span><br /></label
+        ><br /><br />
+
+        <input type="radio" id="S1" name="sexo" value="Hombre" required />
+        <span> Hombre </span><br /><br />
+
+        <input type="radio" id="S2" name="sexo" value="Mujer" />
+        <span> Mujer </span><br /><br />
+
+        <input type="radio" id="S3" name="sexo" value="Otro" />
+        <span> Otro </span><br /><br />
+
+        <label id="labelOtro" for="especifique" class="oculto">
+          Especifique:
+        </label>
+        <input
+          type="text"
+          class="oculto"
+          id="especifique"
+          name="especifique"
+        /><br /><br />
+      </div>
+      <div class="form-box">
+        <label for="age"> Edad: <span class="error">*</span><br /></label>
+        <input
+          type="number"
+          id="age"
+          name="age"
+          min="1"
+          max="99"
+          required
+        /><br /><br />
+      </div>
+      <div class="form-box">
+        <label for="bday">
+          Fecha de Nacimiento: <span class="error">*</span><br
+        /></label>
+        <input type="date" id="bday" name="bday" required /><br /><br />
+      </div>
+      <div class="form-box">
+        <label for="country" class="col-sm-3 control-label"
+          >Nacionalidad: <span class="error">*</span><br
+        /></label>
+        <div class="col-12">
+          <select id="country" name="country" class="form-control">
+            <option>Alemania</option>
+            <option>Brazil</option>
+            <option>Canada</option>
+            <option>China</option>
+            <option>Estados Unidos</option>
+            <option>India</option>
+            <option>Indonesia</option>
+            <option>Japon</option>
+            <option selected>Mexico</option>
+            <option>Rusia</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-box">
+        <label for="photo">
+          Sube tu foto: <span class="error">*</span><br />
+        </label>
+        <input
+          type="file"
+          id="photo"
+          name="photo"
+          accept="image/*"
+          required
+        /><br /><br />
+
+        <label for="example"> Ejemplo </label> <br />
+        <img
+          src="./Documents/images.jpg"
+          alt="Ejemplo"
+          width="100"
+          height="150"
+        /><br /><br />
+      </div>
+      <div class="form-box">
+        <label for="phone"> Telefono: <span class="error">*</span><br /></label>
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          placeholder="000-0000000"
+          pattern="[0-9]{3}-[0-9]{7}"
+          maxlength="11"
+          required
+        /><br /><br />
+        <small
+          >Debe ser 10 digitos, como el siguiente formato: 473-1111111</small
+        ><br /><br />
+      </div>
+      <div class="form-box">
+        <label for="correo"> Correo: <span class="error">*</span><br /></label>
+        <input
+          type="email"
+          id="correo"
+          name="correo"
+          placeholder="ejemplo@hotmail.com"
+          aria-label="correo"
+          aria-describedby="basic-addon1"
+          required
+        /><br /><br />
+      </div>
+      <div class="form-box">
+        <label for="domicilio">
+          Domicilio: <span class="error">*</span><br />
+        </label>
+        <textarea
+          id="domicilio"
+          name="domicilio"
+          rows="3"
+          cols="30"
+          required
+        ></textarea
+        ><br /><br />
+      </div>
+      <div class="form-box">
+        <label for="list"> Listado <span class="error">*</span><br /> </label>
+        <input
+          type="file"
+          id="list"
+          name="list"
+          accept=".txt"
+          required
+        /><br /><br />
+      </div>
+      <div class="form-box">
+        <label for="excel">
+          Archivo Excel <span class="error">*</span><br />
+        </label>
+        <input
+          type="file"
+          id="excel"
+          name="excel"
+          accept=".xlsx, .csv"
+          required
+        /><br /><br />
+      </div>
+      <div class="col-12">
+        <div class="form-check">
+          <label class="form-check-label" for="invalidCheck">
+            Confirmas que estas de acuerdo con los terminos y condiciones.
+            <span class="error">*</span>
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value=""
+              id="invalidCheck"
+              required
+            />
+          </label>
+          <small>Debes aceptar antes de finalizar </small>
+        </div>
+      </div>
+      <input type="submit" value="Finalizar formulario" />
+      <input type="reset" value="Borrar todos los datos" />
+    </form>
+    <br /><br />
+
+    <script>
+      const radioOtro = document.getElementById("S3");
+      const campoEspecifique = document.getElementById("especifique");
+      const labelEspecifique = document.getElementById("labelOtro");
+      radioOtro.addEventListener("change", function () {
+        if (radioOtro.checked) {
+          campoEspecifique.classList.remove("oculto");
+          labelEspecifique.classList.remove("oculto");
+          campoEspecifique.setAttribute("required", "true");
+        } else {
+          campoEspecifique.classList.add("oculto");
+          labelEspecifique.classList.add("oculto");
+          campoEspecifique.removeAttribute("required");
+        }
+      });
+      if (!radioOtro.checked) {
+        campoEspecifique.classList.add("oculto");
+        labelEspecifique.classList.add("oculto");
+      }
+
+      (function () {
+        "use strict";
+
+        const forms = document.querySelectorAll(".needs-validation");
+
+        Array.from(forms).forEach(function (form) {
+          form.addEventListener(
+            "submit",
+            function (event) {
+              if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
+
+              form.classList.add("was-validated");
+            },
+            false
+          );
+        });
+      })();
+    </script>
+  </body>
+</html>
