@@ -11,21 +11,34 @@ $fecha_actual = date('Y-m-d H:i:s');
 $lineas = "";
 $fecha_respuesta = $fecha_actual;
 
-// Verifica si el directorio existe en el sistema al momento de leer el codigo
-$directorio = "uploads/";
-if (!file_exists($directorio)) {
-     if (!mkdir($directorio, 0755, true)) {
-        $error = "Error: No se pudo crear el directorio<br>";
-        include 'Formulario.php';
-        exit();
+// Función para obtener un directorio con permisos de escritura
+function obtenerDirectorioEscritura($directorioPreferido = "uploads/")
+{
+    // Primero intentar con el directorio preferido
+    if (!file_exists($directorioPreferido)) {
+        @mkdir($directorioPreferido, 0755, true);
     }
-}
-if (file_exists($directorio) && !is_writable($directorio)) {
-    $error = "Error: El directorio existe pero no tiene permisos de escritura.<br>";
-    include 'Formulario.php';
-    exit();
+
+    if (file_exists($directorioPreferido) && is_writable($directorioPreferido)) {
+        return $directorioPreferido;
+    }
+
+    // Si el directorio preferido falla, intentar con el directorio temporal del sistema
+    $directorioTemporal = sys_get_temp_dir() . '/formulario_uploads/';
+    if (!file_exists($directorioTemporal)) {
+        @mkdir($directorioTemporal, 0755, true);
+    }
+
+    if (file_exists($directorioTemporal) && is_writable($directorioTemporal)) {
+        return $directorioTemporal;
+    }
+
+    // Si todo falla, usar el directorio actual (con advertencia)
+    return "./";
 }
 
+// Obtener directorio con permisos de escritura
+$directorio = obtenerDirectorioEscritura();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $fecha_respuesta = $fecha_actual;
@@ -49,9 +62,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $rutaArchivo = $directorio . $nombreArchivo;
 
         if (!move_uploaded_file($_FILES["photo"]["tmp_name"], $rutaArchivo)) {
-            $error = "Error al subir la imagen.";
-            include 'Formulario.php';
-            exit();
+            // Si no se puede mover al directorio, usar datos temporales de la imagen
+            $rutaArchivo = "data:image/jpeg;base64," . base64_encode(file_get_contents($_FILES["photo"]["tmp_name"]));
+            $error = "Advertencia: La imagen se ha procesado pero no se ha guardado en el servidor. ";
+            $error .= "Se mostrará directamente desde los datos temporales.";
         }
     } elseif (isset($_FILES["photo"]) && $_FILES["photo"]["error"] != UPLOAD_ERR_NO_FILE) {
         $error = "Error al cargar la imagen: " . $_FILES["photo"]["error"];
@@ -100,8 +114,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Comprueba si todos los campos estan rellenos
-    if (empty($nombre) || empty($sexo) || empty($edad) || empty($bday) || 
-        empty($country) || empty($telefono) || empty($correo) || empty($domicilio)) {
+    if (
+        empty($nombre) || empty($sexo) || empty($edad) || empty($bday) ||
+        empty($country) || empty($telefono) || empty($correo) || empty($domicilio)
+    ) {
         $error = "Por favor, complete todos los campos.";
         include 'Formulario.php';
         exit();
@@ -112,7 +128,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     exit();
 }
 
-function test_input($data) {
+function test_input($data)
+{
     $data = trim($data);
     $data = stripslashes($data);
     $data = htmlspecialchars($data);

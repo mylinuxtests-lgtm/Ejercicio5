@@ -132,7 +132,11 @@ require_once 'Respuestas.php';
             </div>
             <div class="data-field">
                 <h2>Selfie</h2>
-                <img src=" <?php echo $rutaArchivo; ?>" alt="Tu imagen" width="400">
+                <?php if (strpos($rutaArchivo, 'data:image') === 0): ?>
+                    <img src="<?php echo $rutaArchivo; ?>" alt="Tu imagen" width="400">
+                <?php else: ?>
+                    <img src="<?php echo $rutaArchivo; ?>" alt="Tu imagen" width="400">
+                <?php endif; ?>
             </div>
             <div class="data-field">
                 <h2>Telefono</h2>
@@ -156,7 +160,7 @@ require_once 'Respuestas.php';
                         </tr>
                     </thead>
                     <tbody>
-                        <?php 
+                        <?php
                         if (!empty($lineas)) {
                             $lineasArray = explode(",", $lineas);
                             foreach ($lineasArray as $linea) {
@@ -167,15 +171,15 @@ require_once 'Respuestas.php';
                                         <th scope="col"><?php echo isset($name[0]) ? htmlspecialchars($name[0]) : ''; ?></th>
                                         <th scope="col"><?php echo isset($name[1]) ? htmlspecialchars($name[1]) : ''; ?></th>
                                     </tr>
-                                    <?php 
+                                <?php
                                 }
                             }
-                        } 
+                        }
                         ?>
                     </tbody>
                 </table> <br> <br>
             </div>
-            
+
             <?php
             if (!empty($datosExcel)) {
                 echo "<table border='1' cellpadding='5'>";
@@ -225,8 +229,8 @@ require_once 'Respuestas.php';
             } else {
                 echo "<p style='color:red;'>No se pudieron procesar los datos del archivo.</p>";
             }
-            ?> 
-            
+            ?>
+
             <br><br>
             <div>
                 <a href="Formulario.html" class="back-link">Volver al formulario</a> <br><br>
