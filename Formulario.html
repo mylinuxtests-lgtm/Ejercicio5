@@ -39,28 +39,34 @@
         /><br /><br />
       </div>
       <div class="form-box">
-        <label for="sexo"> Sexo: <span class="error">*</span><br /></label
-        ><br /><br />
+    <label for="sexo"> Sexo: <span class="error">*</span><br /></label>
+    <br /><br />
 
+    <label class="radio-label">
         <input type="radio" id="S1" name="sexo" value="Hombre" required />
-        <span> Hombre </span><br /><br />
+        <span class="radio-text">Hombre</span>
+    </label><br />
 
+    <label class="radio-label">
         <input type="radio" id="S2" name="sexo" value="Mujer" />
-        <span> Mujer </span><br /><br />
+        <span class="radio-text">Mujer</span>
+    </label><br />
 
+    <label class="radio-label">
         <input type="radio" id="S3" name="sexo" value="Otro" />
-        <span> Otro </span><br /><br />
+        <span class="radio-text">Otro</span>
+    </label><br />
 
-        <label id="labelOtro" for="especifique" class="oculto">
-          Especifique:
-        </label>
-        <input
-          type="text"
-          class="oculto"
-          id="especifique"
-          name="especifique"
-        /><br /><br />
-      </div>
+    <label id="labelOtro" for="especifique" class="oculto">
+        Especifique:
+    </label>
+    <input
+        type="text"
+        class="oculto"
+        id="especifique"
+        name="especifique"
+    /><br />
+</div>
       <div class="form-box">
         <label for="age"> Edad: <span class="error">*</span><br /></label>
         <input
@@ -111,7 +117,7 @@
 
         <label for="example"> Ejemplo </label> <br />
         <img
-          src=".images.jpg"
+          src="./Documents/images.jpg"
           alt="Ejemplo"
           width="100"
           height="150"
@@ -129,7 +135,7 @@
           required
         /><br /><br />
         <small
-          >Debe ser 10 digitos, como el siguiente formato: 473-1111111</small
+          >Debe ser 10 digitos, como el siguiente formato: 473-0101010</small
         ><br /><br />
       </div>
       <div class="form-box">

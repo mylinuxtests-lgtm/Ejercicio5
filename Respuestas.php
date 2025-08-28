@@ -1,5 +1,4 @@
 <?php
-// Respuestas.php - Procesamiento del formulario
 
 $errores = [];
 $nombre = $sexo = $edad = $bday = $country = $photo = $telefono = $correo = $domicilio = $list = $excel = "";
@@ -14,7 +13,6 @@ $fecha_respuesta = $fecha_actual;
 // Función para obtener un directorio con permisos de escritura
 function obtenerDirectorioEscritura($directorioPreferido = "uploads/")
 {
-    // Primero intentar con el directorio preferido
     if (!file_exists($directorioPreferido)) {
         @mkdir($directorioPreferido, 0755, true);
     }
@@ -23,7 +21,6 @@ function obtenerDirectorioEscritura($directorioPreferido = "uploads/")
         return $directorioPreferido;
     }
 
-    // Si el directorio preferido falla, intentar con el directorio temporal del sistema
     $directorioTemporal = sys_get_temp_dir() . '/formulario_uploads/';
     if (!file_exists($directorioTemporal)) {
         @mkdir($directorioTemporal, 0755, true);
@@ -33,7 +30,7 @@ function obtenerDirectorioEscritura($directorioPreferido = "uploads/")
         return $directorioTemporal;
     }
 
-    // Si todo falla, usar el directorio actual (con advertencia)
+
     return "./";
 }
 
@@ -210,5 +207,109 @@ function validarEmail($email)
     }
 
     return true;
+}
+
+class TextFileRenderer
+{
+    private $lineas;
+
+    public function __construct($lineas)
+    {
+        $this->lineas = $lineas;
+    }
+
+    public function renderTable()
+    {
+        if (empty($this->lineas)) {
+            return "";
+        }
+
+        $output = '<table class="table table-success table-striped">';
+        $output .= '<thead class="table-dark">';
+        $output .= '<tr><th scope="col">Nombre</th><th scope="col">Apellidos</th></tr>';
+        $output .= '</thead><tbody>';
+
+        $lineasArray = explode(",", $this->lineas);
+        foreach ($lineasArray as $linea) {
+            if (!empty(trim($linea))) {
+                $name = explode(" ", $linea, 2);
+                $nombre = isset($name[0]) ? htmlspecialchars($name[0]) : '';
+                $apellidos = isset($name[1]) ? htmlspecialchars($name[1]) : '';
+
+                $output .= '<tr>';
+                $output .= '<th scope="col">' . $nombre . '</th>';
+                $output .= '<th scope="col">' . $apellidos . '</th>';
+                $output .= '</tr>';
+            }
+        }
+
+        $output .= '</tbody></table>';
+        return $output;
+    }
+}
+class ExcelRenderer
+{
+    private $datosExcel;
+
+    public function __construct($datosExcel)
+    {
+        $this->datosExcel = $datosExcel;
+    }
+
+    public function renderTable()
+    {
+        if (empty($this->datosExcel)) {
+            return "<p style='color:red;'>No se pudieron procesar los datos del archivo.</p>";
+        }
+
+        $output = "<table border='1' cellpadding='5'>";
+        $isFirstRow = true;
+
+        foreach ($this->datosExcel as $fila) {
+            $output .= "<tr>";
+            $colIndex = 0;
+
+            foreach ($fila as $value) {
+                $style = "";
+
+                // Para la primera fila (encabezados)
+                if ($isFirstRow) {
+                    $style = "background-color: #4e4e4eab; font-weight:bold;";
+                } else {
+                    // Aplica los estilos según el tipo de dato y la columna
+                    if ($colIndex == 1) { // segunda columna
+                        if (strtoupper($value) === "H") {
+                            $style = "background-color: #23c7c7ff; font-weight:bold;";
+                        } elseif (strtoupper($value) === "M") {
+                            $style = "background-color: #e33abbff; font-weight:bold;";
+                        }
+                    } elseif ($colIndex == 2) { // tercera columna
+                        if (is_numeric($value)) {
+                            if ((int) $value < 18) {
+                                $style = "background-color: #fa3d03ff; font-weight:bold;";
+                            } else {
+                                $style = "background-color: #8279c5ff; font-weight:bold;";
+                            }
+                        }
+                    } elseif ($colIndex == 3) { // cuarta columna
+                        if (validarEmail($value)) {
+                            $style = "background-color: #5de51fff; font-weight:bold;";
+                        } else {
+                            $style = "background-color: #ff0342ff; font-weight:bold;";
+                        }
+                    }
+                }
+
+                $output .= "<td style='$style'>" . htmlspecialchars($value) . "</td>";
+                $colIndex++;
+            }
+
+            $output .= "</tr>";
+            $isFirstRow = false;
+        }
+
+        $output .= "</table>";
+        return $output;
+    }
 }
 ?>
